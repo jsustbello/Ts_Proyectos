@@ -1,0 +1,94 @@
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript">
+
+		var img, canvas, context; //	Declaramos 2 variables globales ya que ahí guardaremos al objeto canvas y nuestro contexto a usar.
+        
+        /*
+		La función SubirImagen() lo que hace es al momento de seleccionar un imagen mediante el input file, este la renderiza en nuestro objeto canvas.
+        */
+        function SubirImagen()
+        {
+            canvas = document.getElementById("canvas");
+            context = canvas.getContext("2d");
+            
+            canvas.width = 700;
+            canvas.height = 500;
+            
+            // Cargamos el objeto que nos permite subir imagenes
+            var imagen = document.getElementById("imagen");
+            if(imagen.files.length == 0)
+            {
+                alert('Debe ingresar una imagen');
+                return;
+            }
+
+            // Creamos la imagen
+            img = new Image();
+            img.src = URL.createObjectURL(imagen.files[0]);
+            
+            img.onload = function() {
+                // Dibujamos la imagen
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+            
+            // Mostramos el canvas
+            document.getElementById("meme").style.display = 'block';
+        }
+
+        /*
+		La función AgregarTexto() lo que hace es que cuando se escriba algo en nuestra caja de texto vuelva a cargar la imagen más el texto agregado en nuestro objeto canva
+		*/
+        function AgregarTexto()
+        {
+            // Cargamos la caja de texto
+            var texto = document.getElementById("texto");
+            
+            img.src = URL.createObjectURL(imagen.files[0]);
+            img.onload = function() {
+                // Dibujamos la imagen
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                // Agregamos el texto
+                context.lineWidth  = 5; // Grosor del borde
+				context.font = '30pt sans-serif'; // tamaño de letra y tipo de fuente
+				context.strokeStyle = 'black'; // color de la sombra
+				context.fillStyle = 'white'; // color del texto
+				context.textAlign = 'center'; // alineación del texto
+
+				texto = texto.value.toUpperCase(); // lo pasamos a mayascula
+
+				var x = canvas.width/2; // para decirle que el texto comience justo al medio
+				var y = canvas.height - 40; // le decimos que el texto comience al final menos ¿40px?
+
+				context.strokeText(texto, x, y); // creamos la sombra
+				context.fillText(texto, x, y); // creamos el texto
+            };
+        }
+	</script>
+</head>
+<body>
+	<center>
+		<div id="subida">
+			<p id="elija">Seleccione una imagen a subir</p>
+			<div>
+				<input id="imagen" type="file"/>
+			</div>
+		</div>
+		<div>
+			<button id="subir" onclick="SubirImagen()">Renderizado</button>
+		</div>
+
+		<div id="meme" class="none">
+			<div>
+				<input id="texto" type="text" onkeyup="AgregarTexto();" placeholder="Texto que desea agregar" maxlength="20" autocomplete="off">
+			</div>
+			<canvas id="canvas"></canvas>
+			<div>
+				<p><b>Click Derecho</b> y <b>Guardar imagen como</b> para descargar</p>
+			</div>
+		</div>
+	</center>
+</body>
+</html>
